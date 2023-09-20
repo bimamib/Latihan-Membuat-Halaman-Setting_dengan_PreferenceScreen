@@ -1,11 +1,13 @@
 package com.bima.mysettingpreference
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.preference.CheckBoxPreference
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceFragmentCompat
 
-class MyPreferenceFragment : PreferenceFragmentCompat() {
+class MyPreferenceFragment : PreferenceFragmentCompat(),
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var NAME: String
     private lateinit var EMAIL: String
@@ -29,16 +31,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat() {
         setSummaries()
     }
 
-    override fun onResume() {
-        super.onResume()
-        preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
-    }
-
     private fun init() {
         NAME = resources.getString(R.string.key_name)
         EMAIL = resources.getString(R.string.key_email)
@@ -51,6 +43,38 @@ class MyPreferenceFragment : PreferenceFragmentCompat() {
         agePreference = findPreference<EditTextPreference>(AGE) as EditTextPreference
         phonePreference = findPreference<EditTextPreference>(PHONE) as EditTextPreference
         isLoveMuPreference = findPreference<CheckBoxPreference>(LOVE) as CheckBoxPreference
+    }
+
+    override fun onResume() {
+        super.onResume()
+        preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+        if (key == NAME) {
+            namePreference.summary = sharedPreferences.getString(NAME, DEFAULT_VALUE)
+        }
+
+        if (key == EMAIL) {
+            emailPreference.summary = sharedPreferences.getString(EMAIL, DEFAULT_VALUE)
+        }
+
+        if (key == AGE) {
+            agePreference.summary = sharedPreferences.getString(AGE, DEFAULT_VALUE)
+        }
+
+        if (key == PHONE) {
+            phonePreference.summary = sharedPreferences.getString(PHONE, DEFAULT_VALUE)
+        }
+
+        if (key == LOVE) {
+            isLoveMuPreference.isChecked = sharedPreferences.getBoolean(LOVE, false)
+        }
     }
 
     private fun setSummaries() {
