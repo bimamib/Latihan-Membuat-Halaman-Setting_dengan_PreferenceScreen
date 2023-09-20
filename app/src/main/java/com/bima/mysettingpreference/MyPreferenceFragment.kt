@@ -29,6 +29,16 @@ class MyPreferenceFragment : PreferenceFragmentCompat() {
         setSummaries()
     }
 
+    override fun onResume() {
+        super.onResume()
+        preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+    }
+
     private fun init() {
         NAME = resources.getString(R.string.key_name)
         EMAIL = resources.getString(R.string.key_email)
