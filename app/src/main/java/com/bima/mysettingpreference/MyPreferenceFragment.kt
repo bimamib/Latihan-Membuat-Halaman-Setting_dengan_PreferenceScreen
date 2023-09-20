@@ -26,6 +26,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(bundle: Bundle?, s: String?) {
         addPreferencesFromResource(R.xml.preferences)
         init()
+        setSummaries()
     }
 
     private fun init() {
@@ -40,5 +41,14 @@ class MyPreferenceFragment : PreferenceFragmentCompat() {
         agePreference = findPreference<EditTextPreference>(AGE) as EditTextPreference
         phonePreference = findPreference<EditTextPreference>(PHONE) as EditTextPreference
         isLoveMuPreference = findPreference<CheckBoxPreference>(LOVE) as CheckBoxPreference
+    }
+
+    private fun setSummaries() {
+        val sh = preferenceManager.sharedPreferences
+        namePreference.summary = sh.getString(NAME, DEFAULT_VALUE)
+        emailPreference.summary = sh.getString(EMAIL, DEFAULT_VALUE)
+        agePreference.summary = sh.getString(AGE, DEFAULT_VALUE)
+        phonePreference.summary = sh.getString(PHONE, DEFAULT_VALUE)
+        isLoveMuPreference.isChecked = sh.getBoolean(LOVE, false)
     }
 }
